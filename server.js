@@ -1,15 +1,16 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+require('dotenv').config(); // 加载环境变量
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // 提供public目录下的静态文件
+app.use(express.static('public'));
 
-// 火山方舟API配置
-const API_KEY = 'b21d6b11-b374-4df0-ab99-afb4c9dbf608';
-const API_URL = 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
+// 从环境变量读取配置
+const API_KEY = process.env.VOLC_AI_API_KEY; // 修改为环境变量
+const API_URL = process.env.VOLC_AI_API_URL || 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
 
 // 处理AI对话请求
 app.post('/api/chat', async (req, res) => {
@@ -53,4 +54,6 @@ app.post('/api/chat', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`服务器运行在 http://localhost:${PORT}`);
+  console.log('API_KEY:', process.env.VOLC_AI_API_KEY ? '已加载' : '未加载');
+  console.log('API_URL:', process.env.VOLC_AI_API_URL || '使用默认URL');
 });
